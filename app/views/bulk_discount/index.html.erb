@@ -1,1 +1,4 @@
 <h2>My Discounts</h2>
+<% @merchant.bulk_discounts.each do |discount| %>
+<%= discount.id %>
+<% end %>
