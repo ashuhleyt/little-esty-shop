@@ -184,7 +184,6 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         expect(page).to have_link("New Discount")
         click_link("New Discount")
         expect(current_path).to eq("/merchants/#{@merchant_1.id}/bulk_discount/new")
-        save_and_open_page
       end
     end 
   end
