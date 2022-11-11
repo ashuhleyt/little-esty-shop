@@ -171,6 +171,13 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         expect(page).to have_link(@discount1.id)
         expect(page).to have_link(@discount2.id)
       end
+
+      it 'see a link to create a new discount' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+
+        expect(page).to have_link("New Discount")
+        save_and_open_page
+      end
     end 
   end
 end
