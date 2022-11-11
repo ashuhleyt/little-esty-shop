@@ -4,6 +4,6 @@
 <li id="discount_<%= "#{discount.id}" %>">
 <%= discount.discount %>% off <%= discount.threshold %> items.
 <%= link_to "Discount ##{discount.id}:", merchant_bulk_discount_index_path(@merchant, discount.id) %>
-<%= link_to "New Discount", merchant_bulk_discount_index_path(@merchant) %>
 <% end %>
 </ol>
+<%= link_to "New Discount", new_merchant_bulk_discount_path(@merchant) %>
