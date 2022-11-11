@@ -3,5 +3,6 @@
 <% @merchant.bulk_discounts.each do |discount| %>
 <li id="discount_<%= "#{discount.id}" %>">
 <%= discount.discount %>% off <%= discount.threshold %> items, or more.
+<%= link_to "Discount ##{discount.id}:", merchant_bulk_discount_index_path(@merchant, discount.id) %>
 <% end %>
 </ol>

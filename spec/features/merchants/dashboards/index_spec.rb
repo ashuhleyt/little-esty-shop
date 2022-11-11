@@ -164,6 +164,13 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         expect(page).to_not have_content(@discount3.discount)
         expect(page).to_not have_content(@discount3.threshold)
       end
+
+      it 'bulk discount listed includes a link to its show page' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+
+        expect(page).to have_link(@discount1.id)
+        expect(page).to have_link(@discount2.id)
+      end
     end 
   end
 end
