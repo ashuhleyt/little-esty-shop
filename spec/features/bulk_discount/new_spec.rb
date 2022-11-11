@@ -17,6 +17,18 @@ RSpec.describe 'New Bulk Discount' do
 
       expect(find('form')).to have_content('Discount')
       expect(find('form')).to have_content('Threshold')
+      save_and_open_page
+    end
+
+    it 'fill in the form with valid data' do 
+      visit "/merchants/#{@merchant_1.id}/bulk_discount/new"
+
+      fill_in('Discount', with: '25')
+      fill_in('Threshold', with: '25')
+
+      click_button 'Save'
+
+      expect(current_path).to eq(merchant_bulk_discount_index_path(@merchant_1))
     end
   end
 end
