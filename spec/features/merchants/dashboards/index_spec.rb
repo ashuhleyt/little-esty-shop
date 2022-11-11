@@ -9,7 +9,7 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
     @discount1 = BulkDiscount.create!(discount: 20, threshold: 5, merchant_id: @merchant_1.id)
     @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant_1.id)
     @discount3 = BulkDiscount.create!(discount: 50, threshold: 25, merchant_id: @merchant_2.id)
-    @discount4 = BulkDiscount.create!(discount: 1, threshold: 3, merchant_id: @merchant_2.id)
+    @discount4 = BulkDiscount.create!(discount: 10, threshold: 3, merchant_id: @merchant_2.id)
 
     @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
     @merchant_1_item_not_ordered = @merchant_1.items.create!(name: "Unordered Item", description: "...", unit_price: 2)
@@ -158,7 +158,11 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
 
       it 'where I see all of my bulk discounts' do 
         visit "/merchants/#{@merchant_1.id}/bulk_discount"
-        expect(page).to have_content(@discount1.id)
+        
+        expect(page).to have_content(@discount1.discount)
+        expect(page).to have_content(@discount1.threshold)
+        expect(page).to_not have_content(@discount3.discount)
+        expect(page).to_not have_content(@discount3.threshold)
       end
     end 
   end
