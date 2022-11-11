@@ -37,5 +37,5 @@
     </div>
   </div>
 
-  <%= link_to "My Discounts", "/merchants/#{@merchant.id}/dashboard/bulkdiscounts"%>
+  <%= link_to "My Discounts", merchant_bulk_discount_index_path(@merchant.id) %>
 </body>

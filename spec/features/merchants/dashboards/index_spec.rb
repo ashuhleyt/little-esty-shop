@@ -143,6 +143,13 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
     describe 'Merchant Bulk Discounts Index' do
       it 'I see a link to view all my discounts' do
         expect(page).to have_link("My Discounts")
+        save_and_open_page
+      end
+
+      it 'click this link and am taken to bulk discounts index page' do 
+        click_link "My Discounts"
+
+        expect(current_path).to eq(merchant_bulk_discount_index_path(@merchant_1.id))
       end
     end 
   end
