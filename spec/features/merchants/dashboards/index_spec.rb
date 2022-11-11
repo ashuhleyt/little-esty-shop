@@ -174,7 +174,7 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
 
       it 'see a link to create a new discount' do 
         visit "/merchants/#{@merchant_1.id}/bulk_discount"
-
+save_and_open_page
         expect(page).to have_link("New Discount")
       end
       
@@ -184,6 +184,12 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         expect(page).to have_link("New Discount")
         click_link("New Discount")
         expect(current_path).to eq("/merchants/#{@merchant_1.id}/bulk_discount/new")
+      end
+
+      it 'I see a link to delete said discount' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+
+        expect(page).to have_link("Delete Discount")
       end
     end 
   end
