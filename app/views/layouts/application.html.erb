@@ -37,17 +37,5 @@
     </div>
     <% end %>
     <%= yield %>
-    <div class="footer">
-      <div class="footer_l">
-        <h4>Repo Name: <%= @repo_name.name %></h4>
-        <h4>Number of Pull Requests: <%=@latest_pr.number%></h4>
-      </div>
-      <div class="footer_r">
-        <h4>Contributors With Number of Commits:</h4>
-        <p><% @contributors.each do |contributor| %>
-          <%= "#{contributor.name}: #{contributor.num_commits}" %>
-        <% end %></p>
-      </div>
-    </div>
   </body>
 </html>

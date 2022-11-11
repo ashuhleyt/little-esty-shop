@@ -6,6 +6,11 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
     @merchant_1 = Merchant.create!(name: "Dave")
     @merchant_2 = Merchant.create!(name: "Kevin")
 
+    @discount1 = BulkDiscount.create!(discount: 20, threshold: 5, merchant_id: @merchant_1.id)
+    @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant_1.id)
+    @discount3 = BulkDiscount.create!(discount: 50, threshold: 25, merchant_id: @merchant_2.id)
+    @discount4 = BulkDiscount.create!(discount: 10, threshold: 3, merchant_id: @merchant_2.id)
+
     @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
     @merchant_1_item_not_ordered = @merchant_1.items.create!(name: "Unordered Item", description: "...", unit_price: 2)
     @merchant_1_item_3 = @merchant_1.items.create!(name: "Newest Item", description: "...", unit_price: 1)
@@ -140,5 +145,32 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         end
       end
     end
+    describe 'Merchant Bulk Discounts Index' do
+      it 'I see a link to view all my discounts' do
+        expect(page).to have_link("My Discounts")
+      end
+      
+      it 'click this link and am taken to bulk discounts index page' do 
+        click_link "My Discounts"
+        
+        expect(current_path).to eq(merchant_bulk_discount_index_path(@merchant_1.id))
+      end
+
+      it 'where I see all of my bulk discounts' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+        
+        expect(page).to have_content(@discount1.discount)
+        expect(page).to have_content(@discount1.threshold)
+        expect(page).to_not have_content(@discount3.discount)
+        expect(page).to_not have_content(@discount3.threshold)
+      end
+
+      it 'bulk discount listed includes a link to its show page' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+
+        expect(page).to have_link(@discount1.id)
+        expect(page).to have_link(@discount2.id)
+      end
+    end 
   end
 end
