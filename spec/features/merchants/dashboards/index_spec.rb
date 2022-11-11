@@ -140,5 +140,10 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         end
       end
     end
+    describe 'Merchant Bulk Discounts Index' do
+      it 'I see a link to view all my discounts' do
+        expect(page).to have_link("My Discounts")
+      end
+    end 
   end
 end
