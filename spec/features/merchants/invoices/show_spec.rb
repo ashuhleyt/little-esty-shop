@@ -26,7 +26,7 @@ RSpec.describe 'On the Merchant Invoices Show Page' do
 
   describe 'When I visit /merchants/:merchant_id/invoices/:invoice_id' do
     describe 'Then I see' do
-      it 'invormation related to that invoice' do
+      it 'information related to that invoice' do
         expect(page).to have_content("Invoice # #{@customer_1_invoice_1.id}")
 
         within "#invoice-stats-#{@customer_1_invoice_1.id}" do
@@ -88,6 +88,14 @@ RSpec.describe 'On the Merchant Invoices Show Page' do
 
             expect(current_path).to eq("/merchants/#{@merchant_1.id}/invoices/#{@customer_1_invoice_1.id}")
             expect(page).to have_select(selected: "pending")
+          end
+        end
+      end
+
+      describe 'as a merchant' do 
+        describe 'when I visit my invoice show page' do 
+          it 'I see the total discounted revenue' do 
+            
           end
         end
       end
