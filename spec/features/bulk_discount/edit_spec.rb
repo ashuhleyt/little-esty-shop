@@ -14,7 +14,13 @@ RSpec.describe 'Bulk Discount Show Page' do
 
   describe 'bulk discount edit' do 
     describe 'form with existing attributes' do 
-      expect(page).to have_content()
+      it 'will display the form with existing discount attributes' do 
+        expect(page).to have_field(:discount, with: @discount1.discount)
+        expect(page).to have_field(:threshold, with: @discount1.threshold)
+
+        
+        
+      end
     end
   end
 end 
