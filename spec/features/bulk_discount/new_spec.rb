@@ -17,7 +17,6 @@ RSpec.describe 'New Bulk Discount' do
 
       expect(find('form')).to have_content('Discount')
       expect(find('form')).to have_content('Threshold')
-      save_and_open_page
     end
 
     it 'fill in the form with valid data' do 
