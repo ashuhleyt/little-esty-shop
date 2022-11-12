@@ -145,6 +145,7 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         end
       end
     end
+
     describe 'Merchant Bulk Discounts Index' do
       it 'I see a link to view all my discounts' do
         expect(page).to have_link("My Discounts")
@@ -170,6 +171,39 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
 
         expect(page).to have_link(@discount1.id)
         expect(page).to have_link(@discount2.id)
+      end
+
+      it 'see a link to create a new discount' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+
+        expect(page).to have_link("New Discount")
+      end
+      
+      it 'when I click this link, I am taken to new page where I see a form to add new discount' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+        
+        expect(page).to have_link("New Discount")
+        click_link("New Discount")
+        expect(current_path).to eq("/merchants/#{@merchant_1.id}/bulk_discount/new")
+      end
+
+      it 'I see a link to delete said discount' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+
+        within("#bulk-discounts-#{@discount1.id}") do 
+          expect(page).to have_link("Delete #{@discount1.id}")
+        end
+      end
+
+      it 'click this link, I am redirected back to the bulk discounts index page & no longer see the discount listed' do 
+        visit "/merchants/#{@merchant_1.id}/bulk_discount"
+
+        within("#bulk-discounts-#{@discount1.id}") do 
+          click_link("Delete #{@discount1.id}")
+        end
+
+        expect(current_path).to eq(merchant_bulk_discount_index_path(@merchant_1))
+        expect(page).to_not have_content(@discount1.id)
       end
     end 
   end
