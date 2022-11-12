@@ -94,8 +94,11 @@ RSpec.describe 'On the Merchant Invoices Show Page' do
 
       describe 'as a merchant' do 
         describe 'when I visit my invoice show page' do 
-          it 'I see the total discounted revenue' do 
-            
+          it 'displays total revenue with discounts applied' do 
+            within "#invoice-stats-#{@customer_1_invoice_1.id}" do
+              # save_and_open_page
+              expect(page).to have_content("Total Discounted Revenue:")
+            end
           end
         end
       end
