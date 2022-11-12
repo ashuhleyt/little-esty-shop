@@ -18,8 +18,11 @@ RSpec.describe 'Bulk Discount Show Page' do
         expect(page).to have_field(:discount, with: @discount1.discount)
         expect(page).to have_field(:threshold, with: @discount1.threshold)
 
-        
-        
+        fill_in('Discount', with: '25')
+        fill_in('Threshold', with: '25')   
+        click_button 'Save'
+
+        expect(current_path).to eq(merchant_bulk_discount_path(@merchant_1, @discount1))
       end
     end
   end
