@@ -7,8 +7,16 @@ RSpec.describe InvoiceItem, type: :model do
   end
 
   before(:each) do
-    @merchant_1 = Merchant.create!(name: "Dave")
-    @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
+    @merchant1 = Merchant.create!(name: "Trey")
+    @merchant2 = Merchant.create!(name: "Meredith")
+    @merchant3 = Merchant.create!(name: "Mikie")
+
+    @discount1 = BulkDiscount.create!(discount: 50, threshold: 1, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant1.id)
+    @discount3 = BulkDiscount.create!(discount: 10, threshold: 25, merchant_id: @merchant2.id)
+    @discount4 = BulkDiscount.create!(discount: 75, threshold: 3, merchant_id: @merchant2.id)
+
+    @merchant_1_item_1 = @merchant1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
 
     @customer_1 = Customer.create!(first_name: "Bob", last_name: "Jones")
     datetime = DateTime.iso8601('2022-11-01', Date::ENGLAND)
@@ -31,6 +39,12 @@ RSpec.describe InvoiceItem, type: :model do
 
       it 'returns formatted date for invoice created_at' do
         expect(@invoice_item_1.invoice_date).to eq("Tuesday, 01 November 2022")
+      end
+    end
+
+    describe '#discount_inv_items' do 
+      it 'returns an array of inv items that qualify for the discount' do 
+        expect(InvoiceItem.discount_inv_items).to eq([@invoice_item_1])
       end
     end
   end

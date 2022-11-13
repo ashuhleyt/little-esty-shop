@@ -13,6 +13,11 @@ RSpec.describe Invoice, type: :model do
     @merchant2 = Merchant.create!(name: "Meredith")
     @merchant3 = Merchant.create!(name: "Mikie")
 
+    @discount1 = BulkDiscount.create!(discount: 50, threshold: 5, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant1.id)
+    @discount3 = BulkDiscount.create!(discount: 10, threshold: 25, merchant_id: @merchant2.id)
+    @discount4 = BulkDiscount.create!(discount: 75, threshold: 3, merchant_id: @merchant2.id)
+
     @merchant_1_item_1 = @merchant1.items.create!(name: "Straw", description: "For Drinking", unit_price: 2)
     @merchant_1_item_not_ordered = @merchant1.items.create!(name: "Unordered Item", description: "...", unit_price: 2)
     @merchant_1_item_2 = @merchant1.items.create!(name: "Plant", description: "Fresh Air", unit_price: 1)
