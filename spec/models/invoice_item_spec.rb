@@ -15,6 +15,7 @@ RSpec.describe InvoiceItem, type: :model do
     @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant1.id)
     @discount3 = BulkDiscount.create!(discount: 10, threshold: 25, merchant_id: @merchant2.id)
     @discount4 = BulkDiscount.create!(discount: 75, threshold: 3, merchant_id: @merchant2.id)
+    @discount5 = BulkDiscount.create!(discount: 45, threshold: 1, merchant_id: @merchant1.id)
 
     @merchant_1_item_1 = @merchant1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
 
@@ -45,6 +46,18 @@ RSpec.describe InvoiceItem, type: :model do
     describe '#discount_inv_items' do 
       it 'returns an array of inv items that qualify for the discount' do 
         expect(InvoiceItem.discount_inv_items).to eq([@invoice_item_1])
+      end
+    end
+
+    describe '#highest_discount' do 
+      xit 'applies the discount to items that qualify' do 
+        expect(@invoice_item_1.highest_discount).to eq(@discount1)
+      end
+    end
+
+    describe '#applied_discount' do 
+      xit 'applies the discount to items that qualify' do 
+        expect(InvoiceItem.applied_discount).to eq(@invoice_item_1)
       end
     end
   end

@@ -15,6 +15,11 @@ class InvoiceItem < ApplicationRecord
     joins(item: [merchant: :bulk_discounts])
     .where("invoice_items.quantity >= bulk_discounts.threshold")
     .group(:id)
-    # require 'pry'; binding.pry
+    require 'pry'; binding.pry
   end
+
+  def highest_discount 
+    discount_inv_items go through all discounts avail and apply the max one. 
+  end
+  
 end

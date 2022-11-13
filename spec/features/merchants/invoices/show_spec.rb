@@ -6,6 +6,11 @@ RSpec.describe 'On the Merchant Invoices Show Page' do
     @merchant_1 = Merchant.create!(name: "Dave")
     @merchant_2 = Merchant.create!(name: "Kevin")
 
+    @discount1 = BulkDiscount.create!(discount: 20, threshold: 5, merchant_id: @merchant_1.id)
+    @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant_1.id)
+    @discount3 = BulkDiscount.create!(discount: 50, threshold: 25, merchant_id: @merchant_2.id)
+    @discount4 = BulkDiscount.create!(discount: 10, threshold: 3, merchant_id: @merchant_2.id)
+
     @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
     @merchant_1_item_2 = @merchant_1.items.create!(name: "Mechanical Pencil", description: "Writing implement", unit_price: 3)
     @merchant_2_item_1 = @merchant_2.items.create!(name: "A Thing", description: "Will do the thing", unit_price: 2)
@@ -96,9 +101,13 @@ RSpec.describe 'On the Merchant Invoices Show Page' do
         describe 'when I visit my invoice show page' do 
           it 'displays total revenue with discounts applied' do 
             within "#invoice-stats-#{@customer_1_invoice_1.id}" do
-              # save_and_open_page
+              
               expect(page).to have_content("Total Discounted Revenue:")
             end
+          end
+
+          it 'I see a link to the show page for the bulk discount that was applied' do 
+            expect(page).to have_link("Applied Bulk Discount")
           end
         end
       end
