@@ -3,6 +3,8 @@ class Invoice < ApplicationRecord
   has_many :transactions
   has_many :invoice_items
   has_many :items, through: :invoice_items
+  # has_many :bulk_discounts, through: :item
+  # has_many :merchants, through: :item
   enum status: ["Cancelled", "Completed", "In Progress"]
 
   def self.incomplete_invoices
@@ -29,6 +31,15 @@ class Invoice < ApplicationRecord
   def invoice_revenue
     self.invoice_items.sum("quantity * unit_price")
   end
-end
+ 
+  def applied_discount
+    invoice_revenue - invoice_items.highest_discount
+  end
+
+  # def qualify_discount
+  #   invoice_items.joins(item: [merchant: :bulk_discounts])
+  #   .where('invoice_items.quantity >= bulk_discounts.threshold')
+  # end
+end 
 
 

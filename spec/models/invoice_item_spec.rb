@@ -4,11 +4,23 @@ RSpec.describe InvoiceItem, type: :model do
   describe "Relationships" do
     it { should belong_to(:invoice) }
     it { should belong_to(:item) }
+
+    it { should have_many(:merchants).through(:item)}
+    it { should have_many(:bulk_discounts).through(:item)}
   end
 
   before(:each) do
-    @merchant_1 = Merchant.create!(name: "Dave")
-    @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
+    @merchant1 = Merchant.create!(name: "Trey")
+    @merchant2 = Merchant.create!(name: "Meredith")
+    @merchant3 = Merchant.create!(name: "Mikie")
+
+    @discount1 = BulkDiscount.create!(discount: 50, threshold: 1, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant1.id)
+    @discount3 = BulkDiscount.create!(discount: 10, threshold: 25, merchant_id: @merchant2.id)
+    @discount4 = BulkDiscount.create!(discount: 75, threshold: 3, merchant_id: @merchant2.id)
+    @discount5 = BulkDiscount.create!(discount: 45, threshold: 1, merchant_id: @merchant1.id)
+
+    @merchant_1_item_1 = @merchant1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
 
     @customer_1 = Customer.create!(first_name: "Bob", last_name: "Jones")
     datetime = DateTime.iso8601('2022-11-01', Date::ENGLAND)
@@ -33,5 +45,11 @@ RSpec.describe InvoiceItem, type: :model do
         expect(@invoice_item_1.invoice_date).to eq("Tuesday, 01 November 2022")
       end
     end
+
+    describe '#highest_discount' do 
+      it 'applies the discount to items that qualify' do 
+        expect(@customer_1_invoice_1.invoice_items.highest_discount).to eq(2)
+      end
+    end 
   end
 end
