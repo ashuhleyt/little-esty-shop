@@ -4,6 +4,9 @@ RSpec.describe InvoiceItem, type: :model do
   describe "Relationships" do
     it { should belong_to(:invoice) }
     it { should belong_to(:item) }
+
+    it { should have_many(:merchants).through(:item)}
+    it { should have_many(:bulk_discounts).through(:item)}
   end
 
   before(:each) do
@@ -43,22 +46,10 @@ RSpec.describe InvoiceItem, type: :model do
       end
     end
 
-    describe '#discount_inv_items' do 
-      it 'returns an array of inv items that qualify for the discount' do 
-        expect(InvoiceItem.discount_inv_items).to eq([@invoice_item_1])
-      end
-    end
-
     describe '#highest_discount' do 
-      xit 'applies the discount to items that qualify' do 
-        expect(@invoice_item_1.highest_discount).to eq(@discount1)
+      it 'applies the discount to items that qualify' do 
+        expect(@customer_1_invoice_1.invoice_items.highest_discount).to eq(2)
       end
-    end
-
-    describe '#applied_discount' do 
-      xit 'applies the discount to items that qualify' do 
-        expect(InvoiceItem.applied_discount).to eq(@invoice_item_1)
-      end
-    end
+    end 
   end
 end

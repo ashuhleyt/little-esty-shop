@@ -6,6 +6,8 @@ RSpec.describe Invoice, type: :model do
     it { should have_many(:transactions) }
     it { should have_many(:invoice_items) }
     it { should have_many(:items).through(:invoice_items) }
+    # it { should have_many(:bulk_discounts).through(:item) }
+    # it { should have_many(:merchants).through(:item) }
   end
 
   before(:each) do
@@ -13,7 +15,7 @@ RSpec.describe Invoice, type: :model do
     @merchant2 = Merchant.create!(name: "Meredith")
     @merchant3 = Merchant.create!(name: "Mikie")
 
-    @discount1 = BulkDiscount.create!(discount: 50, threshold: 5, merchant_id: @merchant1.id)
+    @discount1 = BulkDiscount.create!(discount: 50, threshold: 1, merchant_id: @merchant1.id)
     @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant1.id)
     @discount3 = BulkDiscount.create!(discount: 10, threshold: 25, merchant_id: @merchant2.id)
     @discount4 = BulkDiscount.create!(discount: 75, threshold: 3, merchant_id: @merchant2.id)
@@ -34,9 +36,8 @@ RSpec.describe Invoice, type: :model do
     @customer_1_invoice_1 = @customer1.invoices.create!(status: 1)
     @customer_1_invoice_2 = @customer1.invoices.create!(status: 1)
 
-    InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 3, status: 1)
-    InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_2, quantity: 4, unit_price: 6, status: 1)
-
+    # InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 3, status: 1)
+    # InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_2, quantity: 4, unit_price: 6, status: 1)
 
     @customer_2_invoice_1 = @customer2.invoices.create!(status: 1)
     @customer_3_invoice_1 = @customer3.invoices.create!(status: 1)
@@ -46,7 +47,7 @@ RSpec.describe Invoice, type: :model do
     @customer_6_invoice_1 = @customer6.invoices.create!(status: 1)
     @customer_6_invoice_2 = @customer6.invoices.create!(status: 2)
 
-    InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1)
+    InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 2, unit_price: 15)
     InvoiceItem.create!(invoice: @customer_1_invoice_2, item: @merchant_1_item_1)
     InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1)
     InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1)
@@ -56,6 +57,7 @@ RSpec.describe Invoice, type: :model do
     InvoiceItem.create!(invoice: @customer_6_invoice_1, item: @merchant_3_item_1, quantity: 2, unit_price: 15)
 
     @customer_6_invoice_1.transactions.create!(credit_card_number: 123456789, credit_card_expiration_date: "07/2023", result: "success")
+     
   end
 
   describe 'class methods' do
@@ -63,45 +65,58 @@ RSpec.describe Invoice, type: :model do
       it 'returns the invoices that are still in progress' do
         expect(Invoice.incomplete_invoices).to eq([@customer_6_invoice_2])
       end
+
     end
-
-
+    
+    
     describe ".invoices_for" do
       it 'selects all invoices assoicated with that merchant' do
         expect(Invoice.invoices_for(@merchant1).to_a).to eq([@customer_1_invoice_1, @customer_1_invoice_2])
       end
     end
-
+    
     describe '.invoice_revenue' do
       it 'returns total revenue for specific invoices' do
-        expect(@customer_1_invoice_1.invoice_revenue).to eq(27)
+        expect(@customer_1_invoice_1.invoice_revenue).to eq(30)
       end
     end
   end
-
+  
   describe "instance methods" do
     describe '#customer_last' do
       it 'returns the invoiced customers last name' do
         expect(@customer_1_invoice_1.customer_last).to eq("Valentino")
       end
     end
-
+    
     describe '#customer_first'do
-      it 'returns the invoiced customers first name' do
-        expect(@customer_1_invoice_1.customer_first).to eq("Bobby")
-      end
-    end
-
-    describe '#total_revenue' do
-      it 'returns the sum of all items (unit_cost * quantity) on that invoice, for that merchant' do
-        expect(@customer_6_invoice_1.total_revenue(@merchant2)).to eq(20)
-      end
-    end
-
-    describe '#invoice_revenue' do
-      it 'returns total revenue for specific invoices' do
-        expect(@customer_1_invoice_1.invoice_revenue).to eq(27)
-      end
+    it 'returns the invoiced customers first name' do
+      expect(@customer_1_invoice_1.customer_first).to eq("Bobby")
     end
   end
+  
+  describe '#total_revenue' do
+    it 'returns the sum of all items (unit_cost * quantity) on that invoice, for that merchant' do
+      expect(@customer_6_invoice_1.total_revenue(@merchant2)).to eq(20)
+    end
+  end
+  
+  describe '#invoice_revenue' do
+    it 'returns total revenue for specific invoices' do
+      expect(@customer_1_invoice_1.invoice_revenue).to eq(30)
+    end
+  end
+
+  describe "#applied_discount" do 
+    it 'returns the revenue after discounts are applied' do 
+      expect(@customer_1_invoice_1.applied_discount).to eq(15)
+    end
+  end
+
+  # describe 'qual disc' do 
+  #   it 'tells me the items qualified for a discounts' do 
+  #     expect(@customer_1_invoice_1.qualify_discount.count).to eq(1)
+  #   end
+  # end
 end
+end 

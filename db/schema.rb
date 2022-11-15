@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2022_11_11_002601) do
     t.index ["merchant_id"], name: "index_bulk_discounts_on_merchant_id"
   end
 
-  create_table "customers", /files-pri/T029P2S9M-F048YJ5281K/db_layout.pngforce: :cascade do |t|
+  create_table "customers", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.datetime "created_at", null: false
