@@ -45,7 +45,7 @@ RSpec.describe 'On the Merchant Invoices Show Page' do
         end
       end
 
-      it 'only invormation related to that invoice' do
+      it 'only information related to that invoice' do
         expect(page).to_not have_content("Created at: #{@customer_2_invoice_1.id}")
       end
 
