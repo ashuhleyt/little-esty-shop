@@ -4,10 +4,23 @@ require "date"
 RSpec.describe "Admin Invoice show page" do 
   before(:each) do 
     merchant = Merchant.create!(name: "Practical Magic Shop")
+    @merchant_1 = Merchant.create!(name: "Dave")
+    @merchant_2 = Merchant.create!(name: "Kevin")
+
+    @discount1 = BulkDiscount.create!(discount: 20, threshold: 5, merchant_id: @merchant_1.id)
+    @discount2 = BulkDiscount.create!(discount: 30, threshold: 15, merchant_id: @merchant_1.id)
+    @discount3 = BulkDiscount.create!(discount: 50, threshold: 25, merchant_id: @merchant_2.id)
+    @discount4 = BulkDiscount.create!(discount: 10, threshold: 3, merchant_id: @merchant_2.id)
+
     @book = merchant.items.create!(name: "Book of the dead", description: "book of necromancy spells", unit_price: 4)
     @candle = merchant.items.create!(name: "Candle of life", description: "candle that gifts everlasting life", unit_price: 15)
     @potion = merchant.items.create!(name: "Love potion", description: "One serving size of true love potion", unit_price: 10)
+    @fork = @merchant_1.items.create!(name: "Dinglehopper", description: "eating utensil", unit_price: 2)
   
+    @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
+    @merchant_1_item_2 = @merchant_1.items.create!(name: "Mechanical Pencil", description: "Writing implement", unit_price: 3)
+    @merchant_2_item_1 = @merchant_2.items.create!(name: "A Thing", description: "Will do the thing", unit_price: 2)
+
     @customer = Customer.create!(first_name: "Gandalf", last_name: "Thegrey")
     feb_third = DateTime.new(2022,2,3,4,5,6)
     march_third = DateTime.new(2022,3,3,6,2,3)
@@ -15,6 +28,7 @@ RSpec.describe "Admin Invoice show page" do
     @invoice_1 = @customer.invoices.create!(status: 2, created_at: feb_third)
     @invoice_2 = @customer.invoices.create!(status: 1, created_at: march_third)
 
+    InvoiceItem.create!(invoice: @invoice_1, item: @fork, quantity: 8, unit_price: 2, status: 1)
     InvoiceItem.create!(invoice: @invoice_1, item: @book, quantity: 1, unit_price: 4, status: 1)
     InvoiceItem.create!(invoice: @invoice_1, item: @candle, quantity: 2, unit_price: 15, status: 2)
     InvoiceItem.create!(invoice: @invoice_2, item: @potion, quantity: 3, unit_price: 10, status: 2)
@@ -85,6 +99,11 @@ RSpec.describe "Admin Invoice show page" do
       visit "admin/invoices/#{customer_1_invoice_1.id}"
       
       expect(page).to have_content("Total Revenue: $27")
+    end
+
+    it 'I see the total discounted revenue from this invoice' do
+       visit admin_invoice_path(@invoice_1)
+      expect(page).to have_content("Total Discounted Revenue:")
     end
   end
 end

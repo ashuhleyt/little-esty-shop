@@ -38,8 +38,10 @@ tr:nth-child(even) {
           <h4><%= "Status: #{@invoice.status}" %></h4>
           <h4><%= "Created on: #{@invoice.created_at.strftime("%A, %d %B %Y")}" %></h4>
           <h4><%= "Total Revenue: $#{sprintf('%.2f', @invoice.total_revenue(@merchant))}" %></h4>
-          <h4><%= "Total Discounted Revenue: #{@invoice.invoice_items.highest_discount}" %></h4>
-          <%= link_to "Applied Bulk Discount", "/merchants/#{@merchant.id}/bulk_discounts/}" %>
+          <% if @invoice.applied_discount != nil %>
+          <h4><%= "Total Discounted Revenue: $#{@invoice.applied_discount}" %></h4>
+            <%= link_to "Applied Bulk Discount", "/merchants/#{@merchant.id}/bulk_discounts/#{@invoice_items.highest_discount}}" %>
+          <% end %>
       </div>
       <div id="customer-info-<%= @invoice.id %>">
           <h4> Customer: </h4>
