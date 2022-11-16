@@ -10,3 +10,9 @@
   <% end %>
   </div>
 </ol>
+
+
+<p>Next 3 Holidays</p>
+<% @holidays.each do |holiday| %>
+  <p><%= "#{holiday.name}: #{holiday.date}" %></p>
+<% end %>
